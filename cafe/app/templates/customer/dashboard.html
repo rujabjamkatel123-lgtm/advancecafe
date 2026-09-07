@@ -1,795 +1,207 @@
 {% extends "base.html" %}
 
-{% macro icon(name, size=20) %}
-    {% if name == 'cart' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 5h2l2 11h9l2-8H7" />
-            <circle cx="10" cy="20" r="1" />
-            <circle cx="17" cy="20" r="1" />
-        </svg>
-    {% elif name == 'search' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4 4" />
-        </svg>
-    {% elif name == 'plus' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M12 5v14M5 12h14" />
-        </svg>
-    {% elif name == 'minus' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-            <path d="M5 12h14" />
-        </svg>
-    {% elif name == 'close' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-            <path d="m6 6 12 12M18 6 6 18" />
-        </svg>
-    {% elif name == 'check' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="m5 12 4.2 4.2L19 6.5" />
-        </svg>
-    {% elif name == 'help' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="8.5" />
-            <path d="M9.8 9a2.3 2.3 0 1 1 3.8 1.7c-.9.7-1.6 1.1-1.6 2.3M12 16.5h.01" />
-        </svg>
-    {% elif name == 'clock' %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="8.5" />
-            <path d="M12 7v5l3 2" />
-        </svg>
-    {% else %}
-        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
-            <circle cx="12" cy="12" r="8.5" />
-        </svg>
-    {% endif %}
-{% endmacro %}
+{% block title %}
+    Himalayan Bites · {{ table_name or 'Your Table' }}
+{% endblock %}
 
 {% set cart_count = namespace(value=0) %}
 {% for cart_item in cart.values() %}
     {% set cart_count.value = cart_count.value + (cart_item.quantity | int) %}
 {% endfor %}
-{% set category_values = menu_items | map(attribute='category') | reject('equalto', none) | unique | list %}
 
-{% block title %}
-    Menu · {{ table_name or 'Himalayan Bites' }}
-{% endblock %}
+{% macro icon(name, size=20) %}
+    {% if name == 'menu' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+    {% elif name == 'close' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg>
+    {% elif name == 'search' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+    {% elif name == 'cart' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 4h2l1.5 11h10.5l2-8H6.2" /><circle cx="9" cy="19" r="1.2" /><circle cx="17" cy="19" r="1.2" /></svg>
+    {% elif name == 'plus' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
+    {% elif name == 'minus' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14" /></svg>
+    {% elif name == 'trash' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3" /></svg>
+    {% elif name == 'clock' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M12 7v5l3.5 2" /></svg>
+    {% elif name == 'history' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5" /><path d="M4 4v4.5h4.5M12 7v5l3 2" /></svg>
+    {% elif name == 'help' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5" /><path d="M9.8 9a2.3 2.3 0 1 1 3.7 1.8c-.9.7-1.5 1-1.5 2.2M12 16.2h.01" /></svg>
+    {% elif name == 'pin' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 10c0 5-7 10-7 10S5 15 5 10a7 7 0 1 1 14 0Z" /><circle cx="12" cy="10" r="2.2" /></svg>
+    {% elif name == 'spark' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m12 3 1.4 5.6L19 10l-5.6 1.4L12 17l-1.4-5.6L5 10l5.6-1.4L12 3Z" /><path d="m19 16 .6 2.4L22 19l-2.4.6L19 22l-.6-2.4L16 19l2.4-.6L19 16Z" /></svg>
+    {% elif name == 'check' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4.2 4.2L19 6.5" /></svg>
+    {% elif name == 'arrow' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+    {% elif name == 'utensils' %}
+        <svg width="{{ size }}" height="{{ size }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3v7M4 3v4a2 2 0 0 0 4 0V3M6 10v11" /><path d="M16 3c2.3 1.2 3.2 4.4 2.1 6.7-.5 1-1.2 1.7-2.1 2V21M16 3v18" /></svg>
+    {% endif %}
+{% endmacro %}
 
 {% block content %}
-    <div
-        class="mobile-customer-page"
-        id="customerPage"
-        data-has-table="{{ 'true' if selected_table else 'false' }}"
-    >
-        <header class="customer-header">
-            <a class="brand" href="{{ url_for('customer.dashboard') }}" aria-label="Himalayan Bites menu">
-                <span class="brand-mark">HB</span>
-                <span class="brand-copy">
-                    <strong>Himalayan Bites</strong>
-                    <small>Order from your table</small>
-                </span>
+<div class="hb-app" id="customerApp">
+    <div class="hb-ambient hb-ambient-one"></div>
+    <div class="hb-ambient hb-ambient-two"></div>
+
+    <aside class="hb-sidebar" id="customerSidebar" aria-label="Customer navigation">
+        <div class="hb-sidebar-top">
+            <a class="hb-brand" href="#home" aria-label="Go to dashboard home">
+                <span class="hb-brand-mark">HB</span>
+                <span><strong>Himalayan Bites</strong><small>Table-side dining</small></span>
             </a>
-            <button class="header-cart" type="button" data-open-cart aria-label="Open cart">
-                {{ icon('cart', 20) }}
-                {% if cart_count.value > 0 %}
-                    <span>{{ cart_count.value }}</span>
-                {% endif %}
-            </button>
-        </header>
-
-        <main class="customer-content">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    <div class="flash-stack" aria-live="polite">
-                        {% for category, message in messages %}
-                            <div class="flash-message flash-{{ category }}">
-                                {{ icon('check', 15) }}
-                                <span>{{ message }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            {% endwith %}
-
-            {% if selected_table %}
-                <section class="table-banner">
-                    <span class="table-icon">{{ icon('check', 16) }}</span>
-                    <span class="table-copy">
-                        <small>Ordering from</small>
-                        <strong>{{ selected_table.name }}</strong>
-                    </span>
-                    <span class="ready-badge">Ready</span>
-                </section>
-            {% else %}
-                <section class="welcome-banner">
-                    <div>
-                        <span class="eyebrow">Welcome</span>
-                        <h1>What would you like?</h1>
-                        <p>Scan the QR code on your table to start ordering.</p>
-                    </div>
-                    {{ icon('cart', 24) }}
-                </section>
-            {% endif %}
-
-            {% if selected_table %}
-                <section class="notification-card" data-notification-card aria-live="polite">
-                    <span class="notification-card-icon">{{ icon('bell', 17) }}</span>
-                    <span class="notification-card-copy">
-                        <strong data-notification-title>Get order updates</strong>
-                        <small data-notification-status>Tap Allow notifications to receive Preparing, Ready, and Served updates.</small>
-                    </span>
-                    <button type="button" class="notification-button" data-enable-notifications>Allow notifications</button>
-                </section>
-            {% endif %}
-
-            <section class="menu-heading" aria-labelledby="menu-title">
-                <div>
-                    <span class="eyebrow">Our menu</span>
-                    <h2 id="menu-title">Choose your favourites</h2>
-                </div>
-                <span>{{ menu_items | length }} items</span>
-            </section>
-
-            <label class="search-box">
-                <span class="sr-only">Search menu</span>
-                {{ icon('search', 18) }}
-                <input id="menuSearch" type="search" placeholder="Search food or drinks" autocomplete="off" aria-label="Search food or drinks">
-            </label>
-
-            <div class="category-list" role="tablist" aria-label="Menu categories">
-                <button class="category-button is-active" type="button" data-category="all" role="tab" aria-selected="true">All</button>
-                {% for category in category_values %}
-                    <button class="category-button" type="button" data-category="{{ category | lower | replace(' ', '-') }}" role="tab" aria-selected="false">{{ category }}</button>
-                {% endfor %}
-            </div>
-
-            <section class="menu-list" id="menuList" aria-label="Available menu items">
-                {% for item in menu_items %}
-                    {% set item_category = item.category or 'Other' %}
-                    <article class="food-card" data-food-card data-name="{{ item.name | lower }}" data-category="{{ item_category | lower | replace(' ', '-') }}">
-                        <div class="food-image-wrap">
-                            {% if item.image %}
-                                <img class="food-image" src="{{ url_for('static', filename='uploads/' ~ item.image) }}" alt="{{ item.name }}">
-                            {% else %}
-                                <div class="food-image-placeholder">HB</div>
-                            {% endif %}
-                            <span class="food-category">{{ item_category }}</span>
-                        </div>
-                        <div class="food-details">
-                            <h3>{{ item.name }}</h3>
-                            <p>{{ item.description or 'Freshly prepared for your table.' }}</p>
-                            <div class="food-footer">
-                                <strong>Rs. {{ "%.2f" | format(item.price | float) }}</strong>
-                                {% if selected_table %}
-                                    <form method="POST" action="{{ url_for('customer.add_to_cart', item_id=item.id) }}" data-cart-add>
-                                        <input type="hidden" name="table_id" value="{{ selected_table.id }}">
-                                        {% if item.half_plate_price %}
-                                            <label class="portion-select">
-                                                <span class="sr-only">Portion for {{ item.name }}</span>
-                                                <select name="portion" aria-label="Portion for {{ item.name }}">
-                                                    <option value="full">Full</option>
-                                                    <option value="half">Half</option>
-                                                </select>
-                                            </label>
-                                        {% else %}
-                                            <input type="hidden" name="portion" value="full">
-                                        {% endif %}
-                                        <button class="add-button" type="submit" aria-label="Add {{ item.name }} to cart">
-                                            {{ icon('plus', 16) }}
-                                            Add
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <a class="scan-button" href="{{ url_for('customer.entry') }}">Scan QR</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </article>
-                {% else %}
-                    <div class="empty-state">
-                        <h3>Menu is being updated</h3>
-                        <p>Please check back in a moment.</p>
-                    </div>
-                {% endfor %}
-            </section>
-            <p class="no-results" id="noResults" hidden>No food matched your search.</p>
-
-            {% if orders %}
-                <section class="recent-orders" aria-labelledby="recent-orders-title">
-                    <div class="section-heading">
-                        <div>
-                            <span class="eyebrow">Your table</span>
-                            <h2 id="recent-orders-title">Recent orders</h2>
-                        </div>
-                        <a href="{{ url_for('customer.orders') }}">View all</a>
-                    </div>
-                    {% for order in orders[:3] %}
-                        <div
-                            class="history-row"
-                            data-customer-order
-                            data-order-id="{{ order.id }}"
-                        >
-                            <span>
-                                <strong>Order #{{ order.order_number or order.id }}</strong>
-                                <small>{{ order.created_at }}</small>
-                            </span>
-                            <span class="customer-order-meta">
-                                <b>Rs. {{ "%.2f" | format(order.total | float) }}</b>
-                                <small data-order-status>{{ order.status | title }}</small>
-                            </span>
-                        </div>
-                    {% endfor %}
-                </section>
-            {% endif %}
-
-            <section class="help-card" id="help">
-                {{ icon('help', 20) }}
-                <span>
-                    <strong>Need help?</strong>
-                    <small>Ask our reception team for assistance.</small>
-                </span>
-            </section>
-        </main>
-
-        <div class="cart-bar" id="cartBar" {% if cart_count.value <= 0 %}hidden{% endif %}>
-            <button class="cart-bar-button" type="button" data-open-cart aria-label="Open cart">
-                <span class="cart-badge" id="cartCount">{{ cart_count.value }}</span>
-                <span class="cart-bar-copy"><strong>Your order</strong><small>Tap to review</small></span>
-                <b id="cartBarTotal">Rs. {{ "%.2f" | format(total | float) }}</b>
-                {{ icon('cart', 19) }}
-            </button>
+            <button class="hb-icon-button hb-sidebar-close" id="sidebarClose" type="button" aria-label="Close navigation">{{ icon('close', 19) }}</button>
         </div>
 
-        <div class="cart-overlay" id="cartOverlay" hidden></div>
-        <section class="cart-sheet" id="cartSheet" hidden role="dialog" aria-modal="true" aria-labelledby="cart-title">
-            <div class="cart-sheet-header">
-                <div>
-                    <span class="eyebrow">Review before sending</span>
-                    <h2 id="cart-title">Your order</h2>
+        <div class="hb-table-card">
+            <span class="hb-live-dot"><i></i></span>
+            <span><small>Ordering from</small><strong>{{ table_name or session.get('table_name') or 'Table not selected' }}</strong></span>
+            {{ icon('arrow', 15) }}
+        </div>
+
+        <nav class="hb-nav-list">
+            <a class="hb-nav-item is-active" href="#home" data-section="home">{{ icon('spark', 18) }}<span>Overview</span></a>
+            <a class="hb-nav-item" href="#menu" data-section="menu">{{ icon('utensils', 18) }}<span>Browse menu</span></a>
+            <a class="hb-nav-item" href="#cart" data-section="cart">{{ icon('cart', 18) }}<span>Your order</span><b class="hb-nav-count{% if cart_count.value == 0 %} is-empty{% endif %}" data-cart-count>{{ cart_count.value }}</b></a>
+            <a class="hb-nav-item" href="#history" data-section="history">{{ icon('history', 18) }}<span>Order history</span></a>
+            <a class="hb-nav-item" href="#help" data-section="help">{{ icon('help', 18) }}<span>How it works</span></a>
+        </nav>
+
+        <div class="hb-sidebar-bottom">
+            <div class="hb-fresh-note"><span>{{ icon('check', 15) }}</span><div><strong>Freshly prepared</strong><p>Sent straight to the kitchen.</p></div></div>
+            <div class="hb-sidebar-footer"><span>Himalayan Bites</span><span>v2.4</span></div>
+        </div>
+    </aside>
+
+    <main class="hb-main">
+        <header class="hb-topbar">
+            <button class="hb-mobile-menu hb-icon-button" id="sidebarOpen" type="button" aria-label="Open navigation">{{ icon('menu', 21) }}</button>
+            <div class="hb-breadcrumb"><span>Customer dashboard</span><i>/</i><strong>Overview</strong></div>
+            <div class="hb-top-actions">
+                <div class="hb-connected"><span></span> Connected <b>·</b> {{ table_name or session.get('table_name') or 'Table 07' }}</div>
+                <a class="hb-cart-trigger" href="#cart">{{ icon('cart', 18) }}<span>Order</span><b class="hb-cart-count{% if cart_count.value == 0 %} is-empty{% endif %}" data-cart-count>{{ cart_count.value }}</b></a>
+                <span class="hb-avatar">HB</span>
+            </div>
+        </header>
+
+        <div class="hb-content">
+            <section class="hb-hero hb-section-anchor" id="home">
+                <div class="hb-hero-copy hb-reveal hb-reveal-one">
+                    <span class="hb-eyebrow"><i></i> A table-side experience {{ icon('spark', 14) }}</span>
+                    <h1>Good food,<br><em>no waiting.</em></h1>
+                    <p>Browse our menu, build your order, and send it straight to the kitchen. Your table is already connected.</p>
+                    <div class="hb-hero-actions"><a class="hb-primary-button" href="#menu">Explore the menu {{ icon('arrow', 17) }}</a><a class="hb-text-button" href="#help">How ordering works <span>↗</span></a></div>
+                    <div class="hb-hero-meta"><div class="hb-avatar-stack"><span>R</span><span>M</span><span>S</span></div><p><strong>4.9/5</strong> from tonight's tables<br><span>Made for lingering dinners.</span></p></div>
                 </div>
-                <button class="close-button" type="button" data-close-cart aria-label="Close cart">{{ icon('close', 18) }}</button>
-            </div>
+                <div class="hb-hero-visual hb-reveal hb-reveal-two">
+                    <div class="hb-hero-image"><img src="{{ url_for('static', filename='uploads/hero-momo.jpg') }}" data-fallback="{{ url_for('static', filename='images/momo-hero.jpg') }}" alt="Steamed Himalayan momos" /></div>
+                    <div class="hb-orbit hb-orbit-one"></div><div class="hb-orbit hb-orbit-two"></div>
+                    <div class="hb-float hb-float-top"><span>{{ icon('clock', 16) }}</span><small>Average prep<strong>12–18 min</strong></small></div>
+                    <div class="hb-float hb-float-bottom"><span>{{ icon('check', 16) }}</span><small>Kitchen status<strong>Taking orders</strong></small></div>
+                    <b class="hb-sparkle hb-sparkle-one">✦</b><b class="hb-sparkle hb-sparkle-two">✦</b>
+                </div>
+            </section>
 
-            <div class="cart-items" id="cartItems">
-                {% for key, cart_item in cart.items() %}
-                    <div class="cart-item" data-cart-item data-item-id="{{ cart_item.id }}">
-                        <span class="cart-item-copy">
-                            <strong>{{ cart_item.name }}</strong>
-                            <small>{{ cart_item.portion_label or 'Full Plate' }} · Rs. {{ "%.2f" | format(cart_item.price | float) }}</small>
-                        </span>
-                        <form class="quantity-controls" method="POST" action="{{ url_for('customer.update_cart', item_id=cart_item.id) }}" data-cart-update>
-                            <button type="submit" name="quantity" value="{{ [cart_item.quantity | int - 1, 0] | max }}" aria-label="Decrease {{ cart_item.name }}">{{ icon('minus', 14) }}</button>
-                            <span data-cart-quantity>{{ cart_item.quantity }}</span>
-                            <button type="submit" name="quantity" value="{{ cart_item.quantity | int + 1 }}" aria-label="Increase {{ cart_item.name }}">{{ icon('plus', 14) }}</button>
-                        </form>
-                    </div>
-                {% endfor %}
-            </div>
+            <section class="hb-stat-strip hb-reveal hb-reveal-three">
+                <div><span>01</span><strong>Choose</strong><small>Pick your favourites</small></div><i></i><div><span>02</span><strong>Send</strong><small>Kitchen gets it instantly</small></div><i></i><div><span>03</span><strong>Enjoy</strong><small>We bring it to your table</small></div><div class="hb-stat-note">{{ icon('pin', 18) }}<small>Currently serving<strong>{{ table_name or session.get('table_name') or 'Table 07 · Garden' }}</strong></small></div>
+            </section>
 
-            <div class="cart-empty" id="cartEmpty" {% if cart_count.value > 0 %}hidden{% endif %}>
-                {{ icon('cart', 25) }}
-                <h3>Your cart is empty</h3>
-                <p>Add something from the menu.</p>
-            </div>
+            <section class="hb-menu-section hb-section-anchor" id="menu">
+                <div class="hb-section-heading hb-reveal"><div><span class="hb-eyebrow"><i></i> From our kitchen</span><h2>Explore the menu</h2><p>Choose a favourite, then we will take care of the rest.</p></div><label class="hb-search-field">{{ icon('search', 17) }}<input id="menuSearch" type="search" placeholder="Search dishes" autocomplete="off" /></label></div>
+                {% set category_ns = namespace(names=[]) %}{% for item in menu_items %}{% if item.category not in category_ns.names %}{% set category_ns.names = category_ns.names + [item.category] %}{% endif %}{% endfor %}
+                <div class="hb-category-tabs hb-reveal hb-reveal-one" role="tablist"><button class="is-active" type="button" data-category="all">All dishes</button>{% for category in category_ns.names %}<button type="button" data-category="{{ category or 'Other' }}">{{ category or 'Other' }}</button>{% endfor %}</div>
+                <div class="hb-menu-grid" id="menuGrid">
+                    {% for item in menu_items %}
+                    <article class="hb-food-card hb-reveal hb-reveal-{{ (loop.index % 3) + 1 }}" data-category="{{ item.category or 'Other' }}" data-food-name="{{ item.name|lower }}">
+                        <div class="hb-food-image"><img src="{% if item.image %}{{ url_for('static', filename='uploads/' ~ item.image) }}{% else %}{{ url_for('static', filename='images/momo-hero.jpg') }}{% endif %}" alt="{{ item.name }}" loading="lazy" /><span>{{ item.category or 'Other' }}</span><b>0{{ loop.index }}</b></div>
+                        <div class="hb-food-body"><div class="hb-food-title"><div><small>{{ item.category or 'Other' }}</small><h3>{{ item.name }}</h3></div><strong>Rs. {{ '%.2f'|format(item.price|float) }}</strong></div><p>{{ item.description or 'Prepared fresh with authentic Himalayan flavours.' }}</p><form class="hb-add-form" action="{{ url_for('customer.add_to_cart', item_id=item.id) }}" method="POST"><input type="hidden" name="portion" value="full" /><button type="submit">Add to order {{ icon('plus', 16) }}</button></form></div>
+                    </article>
+                    {% else %}<div class="hb-empty-state">{{ icon('utensils', 25) }}<strong>Our menu is being refreshed</strong><span>Please check again in a moment.</span></div>{% endfor %}
+                </div>
+                <p class="hb-no-results" id="noResults" hidden>No dishes match your search.</p>
+            </section>
 
-            <div class="cart-total" id="cartTotalRow" {% if cart_count.value <= 0 %}hidden{% endif %}>
-                <span>Total</span>
-                <strong id="cartSheetTotal">Rs. {{ "%.2f" | format(total | float) }}</strong>
-            </div>
+            <section class="hb-order-section hb-section-anchor" id="cart">
+                <div class="hb-section-heading hb-compact hb-reveal"><div><span class="hb-eyebrow"><i></i> Ready when you are</span><h2>Your order</h2><p>Review your choices before sending them to the restaurant.</p></div><span class="hb-order-count">{{ cart_count.value }} item{% if cart_count.value != 1 %}s{% endif %}</span></div>
+                <div class="hb-order-layout"><div class="hb-order-card hb-reveal hb-reveal-one"><div class="hb-order-card-top"><div><small>Current selection</small><h3>Order for {{ table_name or session.get('table_name') or 'your table' }}</h3></div><span>{{ icon('cart', 20) }}</span></div>{% if cart %}<div class="hb-cart-list">{% for item in cart.values() %}<div class="hb-cart-row"><div class="hb-cart-main"><strong>{{ item.name }}</strong><span>{{ item.portion_label or 'Full portion' }}</span><small>Rs. {{ '%.2f'|format(item.price|float) }} each</small></div><div class="hb-quantity"><form action="{{ url_for('customer.update_cart', item_id=item.id) }}" method="POST"><input type="hidden" name="quantity" value="{{ item.quantity - 1 }}" /><button type="submit" aria-label="Decrease {{ item.name }}">{{ icon('minus', 14) }}</button></form><b>{{ item.quantity }}</b><form action="{{ url_for('customer.update_cart', item_id=item.id) }}" method="POST"><input type="hidden" name="quantity" value="{{ item.quantity + 1 }}" /><button type="submit" aria-label="Increase {{ item.name }}">{{ icon('plus', 14) }}</button></form></div><strong class="hb-line-total">Rs. {{ '%.2f'|format((item.price|float) * (item.quantity|int)) }}</strong><form action="{{ url_for('customer.remove_from_cart', item_id=item.id) }}" method="POST"><button class="hb-remove" type="submit" aria-label="Remove {{ item.name }}">{{ icon('trash', 15) }}</button></form></div>{% endfor %}</div>{% else %}<div class="hb-empty-cart">{{ icon('cart', 25) }}<strong>Your order is waiting</strong><span>Add a few favourites from the menu.</span></div>{% endif %}<div class="hb-order-summary"><span>Subtotal</span><strong>Rs. {{ '%.2f'|format(cart_total|default(0)|float) }}</strong><small>Service charge included · Taxes calculated at checkout</small></div><form action="{{ url_for('customer.place_order') }}" method="POST"><button class="hb-primary-button hb-full-button" type="submit">Send to kitchen {{ icon('arrow', 17) }}</button></form></div><aside class="hb-order-tip hb-reveal hb-reveal-two"><span class="hb-tip-icon">✦</span><small>Ordering tip</small><h3>Need something<br><em>extra?</em></h3><p>Use the note field at checkout for allergies, spice preferences, or a little extra achar.</p><a class="hb-text-button" href="#help">See how it works {{ icon('arrow', 15) }}</a></aside></div>
+            </section>
 
-            <div id="cartActions" {% if cart_count.value <= 0 %}hidden{% endif %}>
-                <form method="POST" action="{{ url_for('customer.place_order') }}" data-cart-place-order>
-                    <input type="hidden" name="table_id" value="{{ table_id }}">
-                    <button class="place-order" type="submit">Confirm order {{ icon('check', 16) }}</button>
-                </form>
-                <form method="POST" action="{{ url_for('customer.clear_cart') }}" data-cart-clear>
-                    <button class="clear-cart" type="submit">Clear order</button>
-                </form>
-            </div>
-        </section>
-    </div>
-{% endblock %}
+            <section class="hb-history-section hb-section-anchor" id="history"><div class="hb-section-heading hb-compact hb-reveal"><div><span class="hb-eyebrow"><i></i> Keep track of everything</span><h2>Order history</h2><p>Recent orders from {{ table_name or session.get('table_name') or 'your table' }}.</p></div></div><div class="hb-history-list">{% for order in orders or [] %}<div class="hb-history-row hb-reveal"><div><strong>#{{ order.id }}</strong><small>{{ order.created_at }}</small></div><p>{{ order.items_summary or 'Restaurant order' }}</p><span class="hb-status hb-status-{{ order.status|lower }}">{{ order.status|title }}</span><strong>Rs. {{ '%.2f'|format(order.total|float) }}</strong>{{ icon('arrow', 15) }}</div>{% else %}<div class="hb-empty-state">{{ icon('history', 25) }}<strong>No orders yet</strong><span>Your completed orders will appear here.</span></div>{% endfor %}</div></section>
 
-{% block extra_css %}
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@400;500;600;700&display=swap');
+            <section class="hb-help-section hb-section-anchor" id="help"><div class="hb-help-panel hb-reveal"><div><span class="hb-eyebrow"><i></i> A little guidance</span><h2>Ordering made<br><em>easy.</em></h2><p>Your table is connected, so everything you send arrives with the restaurant team in real time.</p><a class="hb-primary-button" href="#menu">Start browsing {{ icon('arrow', 17) }}</a></div><div class="hb-help-steps"><div><b>01</b><span><strong>Your table is connected</strong><small>We know exactly where to bring your order.</small></span></div><div><b>02</b><span><strong>Choose your favourites</strong><small>Build your order at your own pace.</small></span></div><div><b>03</b><span><strong>Track your order</strong><small>Watch the kitchen status change as we cook.</small></span></div></div></div></section>
+            <footer class="hb-footer"><span><strong>HB</strong> Himalayan Bites</span><span>Slow food · Fast table service</span><span>© 2026</span></footer>
+        </div>
+    </main>
+</div>
 
-        :root {
-            --green: #176B4D;
-            --green-dark: #0E4D38;
-            --green-soft: #EAF5EF;
-            --orange: #C7682A;
-            --ink: #20322A;
-            --muted: #748079;
-            --background: #F7FAF8;
-            --surface: #FFF;
-            --border: #E0E9E4;
-            --display: 'Fira Code', monospace;
-            --body: 'Fira Sans', system-ui, sans-serif;
-            --shadow: 0 8px 24px rgba(21, 59, 43, .07);
-        }
+<style>
+:root{--hb-ink:#272525;--hb-muted:#77716d;--hb-soft:#9c9490;--hb-paper:#f7f4ef;--hb-white:#fffdf9;--hb-line:rgba(58,47,42,.1);--hb-terracotta:#c75f48;--hb-dark:#a84b38;--hb-sage:#dbe7d6;--hb-ease:cubic-bezier(.23,1,.32,1)}
+.hb-app{min-height:100vh;position:relative;overflow:hidden;background:radial-gradient(circle at 80% -10%,rgba(244,207,173,.35),transparent 32%),var(--hb-paper);color:var(--hb-ink);font-family:"DM Sans",sans-serif}.hb-app *{box-sizing:border-box}.hb-ambient{position:fixed;pointer-events:none;border-radius:999px;filter:blur(2px);opacity:.45;z-index:0}.hb-ambient-one{width:430px;height:430px;right:-180px;top:23%;background:radial-gradient(circle,rgba(217,190,214,.38),transparent 69%)}.hb-ambient-two{width:360px;height:360px;left:30%;bottom:-230px;background:radial-gradient(circle,rgba(177,202,169,.28),transparent 70%)}.hb-sidebar{width:252px;position:fixed;inset:0 auto 0 0;z-index:10;display:flex;flex-direction:column;padding:31px 22px 24px;border-right:1px solid var(--hb-line);background:rgba(248,245,240,.86);backdrop-filter:blur(20px)}.hb-sidebar-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:42px}.hb-brand{display:flex;align-items:center;gap:11px;color:var(--hb-ink);text-decoration:none}.hb-brand-mark{width:39px;height:39px;display:grid;place-items:center;color:#fff;background:var(--hb-terracotta);border-radius:14px 14px 14px 4px;font:700 13px "Space Grotesk",sans-serif;box-shadow:0 8px 20px rgba(199,95,72,.23)}.hb-brand strong,.hb-brand small{display:block}.hb-brand strong{font:700 14px/1.1 "Space Grotesk",sans-serif}.hb-brand small{margin-top:4px;color:var(--hb-soft);font-size:10px}.hb-icon-button{display:grid;place-items:center;padding:8px;color:var(--hb-ink);background:transparent;border:0;border-radius:10px}.hb-sidebar-close,.hb-mobile-menu{display:none}.hb-table-card{display:flex;align-items:center;gap:10px;padding:13px 12px;margin-bottom:28px;border:1px solid rgba(199,95,72,.12);border-radius:15px;background:rgba(255,253,249,.62)}.hb-live-dot{width:29px;height:29px;display:grid;place-items:center;background:#f2e6da;border-radius:10px}.hb-live-dot i{width:7px;height:7px;background:#7eae71;border-radius:50%;box-shadow:0 0 0 4px rgba(126,174,113,.14)}.hb-table-card>span:nth-child(2){flex:1}.hb-table-card small,.hb-table-card strong{display:block}.hb-table-card small{color:var(--hb-soft);font-size:10px}.hb-table-card strong{margin-top:3px;font-size:11px}.hb-table-card>svg{color:var(--hb-soft);transform:rotate(90deg)}.hb-nav-list{display:flex;flex-direction:column;gap:5px}.hb-nav-item{position:relative;display:flex;align-items:center;gap:12px;width:100%;padding:12px 13px;color:#807873;border-radius:12px;text-decoration:none;font-size:12px;transition:.2s}.hb-nav-item:hover,.hb-nav-item.is-active{color:var(--hb-dark);background:#f5e4d9}.hb-nav-item.is-active:before{content:"";position:absolute;left:-22px;width:3px;height:22px;background:var(--hb-terracotta);border-radius:0 4px 4px 0}.hb-nav-count,.hb-cart-count{min-width:20px;height:20px;display:grid;place-items:center;margin-left:auto;color:#fff;background:var(--hb-terracotta);border-radius:7px;font-size:10px}.is-empty{display:none}.hb-sidebar-bottom{margin-top:auto}.hb-fresh-note{display:flex;gap:9px;padding:14px 12px;margin-bottom:26px;background:rgba(225,235,219,.68);border:1px solid rgba(132,163,124,.12);border-radius:14px}.hb-fresh-note>span{width:22px;height:22px;display:grid;place-items:center;flex:none;color:#64865c;background:#d4e2ce;border-radius:7px}.hb-fresh-note strong,.hb-fresh-note p{display:block}.hb-fresh-note strong{font-size:11px}.hb-fresh-note p{margin:4px 0 0;color:#71806c;font-size:10px}.hb-sidebar-footer,.hb-footer{display:flex;justify-content:space-between;color:var(--hb-soft);font-size:9px}.hb-main{position:relative;z-index:1;margin-left:252px;min-height:100vh}.hb-topbar{height:85px;display:flex;align-items:center;justify-content:space-between;max-width:1310px;padding:0 62px;border-bottom:1px solid rgba(58,47,42,.06)}.hb-breadcrumb{display:flex;align-items:center;gap:11px;color:var(--hb-soft);font-size:11px}.hb-breadcrumb i{color:#c5beb8;font-style:normal}.hb-breadcrumb strong{color:var(--hb-ink)}.hb-top-actions{display:flex;align-items:center;gap:15px}.hb-connected{display:flex;align-items:center;gap:7px;color:#75856d;font-size:10px}.hb-connected>span{width:6px;height:6px;background:#7eae71;border-radius:50%}.hb-connected b{color:#c9c1bb;font-weight:400}.hb-cart-trigger{display:flex;align-items:center;gap:7px;padding:10px 12px;color:var(--hb-ink);background:var(--hb-white);border:1px solid var(--hb-line);border-radius:11px;text-decoration:none;font-size:11px}.hb-avatar{width:31px;height:31px;display:grid;place-items:center;color:#8a5643;background:#eed9ca;border-radius:50%;font-size:10px;font-weight:700}.hb-content{max-width:1310px;padding:36px 62px 30px}.hb-section-anchor{scroll-margin-top:30px}.hb-hero{display:grid;grid-template-columns:minmax(0,.95fr) minmax(440px,1.05fr);gap:42px;align-items:center;max-width:1120px;padding:47px 0 61px}.hb-eyebrow{display:flex;align-items:center;gap:8px;color:var(--hb-terracotta);font-size:10px;font-weight:700;letter-spacing:.11em;text-transform:uppercase}.hb-eyebrow i{width:20px;height:1px;background:currentColor}.hb-hero h1{margin:19px 0 17px;color:#2d2927;font:700 clamp(49px,5.2vw,78px)/.91 "Space Grotesk",sans-serif;letter-spacing:-.075em}.hb-hero h1 em,.hb-section-heading h2 em,.hb-help-panel h2 em{color:var(--hb-terracotta);font-style:normal}.hb-hero-copy>p{max-width:385px;margin-bottom:27px;color:var(--hb-muted);font-size:14px;line-height:1.7}.hb-hero-actions{display:flex;align-items:center;gap:20px}.hb-primary-button{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 18px;color:#fff;background:var(--hb-terracotta);border-radius:11px;box-shadow:0 10px 22px rgba(199,95,72,.2);font-size:11px;font-weight:700;text-decoration:none}.hb-text-button{display:inline-flex;align-items:center;gap:7px;padding:5px 0;color:var(--hb-ink);font-size:11px;font-weight:650;text-decoration:none}.hb-text-button span{color:var(--hb-terracotta);font-size:16px}.hb-hero-meta{display:flex;align-items:center;gap:11px;margin-top:38px}.hb-avatar-stack{display:flex;padding-left:7px}.hb-avatar-stack span{width:23px;height:23px;display:grid;place-items:center;margin-left:-7px;color:#fff;border:2px solid var(--hb-paper);border-radius:50%;font-size:8px;font-weight:700}.hb-avatar-stack span:nth-child(1){background:#a7624d}.hb-avatar-stack span:nth-child(2){background:#718d6e}.hb-avatar-stack span:nth-child(3){background:#ac93a8}.hb-hero-meta p{margin:0;color:var(--hb-soft);font-size:10px;line-height:1.5}.hb-hero-meta strong{color:var(--hb-ink);font-size:11px}.hb-hero-visual{min-height:415px;position:relative;display:grid;place-items:center}.hb-hero-image{width:min(100%,485px);aspect-ratio:1.13;position:relative;overflow:hidden;border:11px solid rgba(255,253,249,.75);border-radius:47% 53% 48% 52%/55% 43% 57% 45%;transform:rotate(4deg);box-shadow:0 26px 44px rgba(116,67,45,.15);z-index:1}.hb-hero-image img{width:100%;height:100%;display:block;object-fit:cover;transform:scale(1.09)}.hb-orbit{position:absolute;border:1px solid rgba(199,95,72,.22);border-radius:50%}.hb-orbit-one{width:520px;height:200px}.hb-orbit-two{width:400px;height:440px;transform:rotate(42deg);border-color:rgba(183,159,174,.25)}.hb-float{position:absolute;z-index:2;display:flex;align-items:center;gap:9px;padding:10px 14px 10px 10px;background:rgba(255,253,249,.9);border:1px solid rgba(58,47,42,.09);border-radius:13px;box-shadow:0 12px 28px rgba(84,56,45,.1)}.hb-float-top{top:41px;right:7px}.hb-float-bottom{bottom:47px;left:12px}.hb-float>span{width:28px;height:28px;display:grid;place-items:center;color:#b2765e;background:#f7e5da;border-radius:9px}.hb-float small,.hb-float strong{display:block}.hb-float small{color:var(--hb-soft);font-size:9px}.hb-float strong{margin-top:2px;color:var(--hb-ink);font-size:11px}.hb-sparkle{position:absolute;color:var(--hb-terracotta);font-size:19px}.hb-sparkle-one{top:15px;left:18%}.hb-sparkle-two{right:3%;bottom:11%;color:#a990aa}.hb-stat-strip{display:flex;align-items:center;gap:26px;padding:19px 22px;margin-bottom:88px;background:rgba(255,253,249,.7);border:1px solid var(--hb-line);border-radius:17px}.hb-stat-strip>div:not(.hb-stat-note){display:grid;grid-template-columns:auto 1fr;column-gap:9px}.hb-stat-strip>div:not(.hb-stat-note)>span{grid-row:1/3;color:var(--hb-terracotta);font-weight:700;font-size:10px}.hb-stat-strip strong,.hb-stat-strip small{display:block}.hb-stat-strip strong{font-size:11px}.hb-stat-strip small{margin-top:3px;color:var(--hb-soft);font-size:10px}.hb-stat-strip>i{width:1px;height:29px;background:var(--hb-line)}.hb-stat-note{display:flex;align-items:center;gap:9px;margin-left:auto;padding-left:17px;color:#7d9477;border-left:1px solid var(--hb-line);font-size:9px}.hb-stat-note strong{color:var(--hb-ink);font-size:10px}.hb-menu-section,.hb-order-section,.hb-history-section,.hb-help-section{padding-bottom:105px}.hb-section-heading{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:26px}.hb-section-heading h2{margin:10px 0 5px;font:700 clamp(31px,3.3vw,48px)/.95 "Space Grotesk",sans-serif;letter-spacing:-.065em}.hb-section-heading p{margin:0;color:var(--hb-muted);font-size:12px}.hb-search-field{width:205px;display:flex;align-items:center;gap:8px;padding:12px 13px;color:var(--hb-soft);background:rgba(255,253,249,.72);border:1px solid var(--hb-line);border-radius:11px}.hb-search-field input{width:100%;color:var(--hb-ink);background:transparent;border:0;outline:0;font-size:11px}.hb-category-tabs{display:flex;gap:8px;margin-bottom:22px;overflow:auto}.hb-category-tabs button{padding:8px 14px;color:var(--hb-soft);background:transparent;border:0;border-radius:10px;font-size:10px;white-space:nowrap}.hb-category-tabs button.is-active{color:var(--hb-dark);background:#f2dfd3;font-weight:700}.hb-menu-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:19px}.hb-food-card{overflow:hidden;background:rgba(255,253,249,.88);border:1px solid var(--hb-line);border-radius:20px;box-shadow:0 12px 25px rgba(74,52,40,.045)}.hb-food-image{height:174px;position:relative;overflow:hidden;background:#e7d1be}.hb-food-image img{width:100%;height:100%;display:block;object-fit:cover;filter:saturate(.84)}.hb-food-image span{position:absolute;top:13px;left:13px;padding:6px 8px;color:#6f5b4f;background:rgba(255,253,249,.78);border-radius:8px;font-size:9px}.hb-food-image>b{position:absolute;right:13px;bottom:11px;color:rgba(255,255,255,.75);font-size:11px}.hb-food-body{padding:16px 16px 15px}.hb-food-title{display:flex;align-items:start;justify-content:space-between;gap:8px}.hb-food-title small{color:var(--hb-terracotta);font-size:9px;font-weight:700;text-transform:uppercase}.hb-food-title h3{margin:5px 0 0;font:700 19px "Space Grotesk",sans-serif}.hb-food-title>strong{color:var(--hb-dark);font:700 12px "Space Grotesk",sans-serif;white-space:nowrap}.hb-food-body>p{min-height:34px;margin:12px 0 14px;color:var(--hb-muted);font-size:11px;line-height:1.5}.hb-add-form button{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 9px 9px 12px;color:var(--hb-ink);background:#f6f1eb;border:0;border-radius:10px;font-size:10px;font-weight:700}.hb-add-form button svg{padding:4px;box-sizing:content-box;color:var(--hb-terracotta-dark);background:var(--hb-white);border-radius:7px}.hb-empty-state{display:grid;place-items:center;gap:8px;min-height:170px;color:var(--hb-muted);border:1px dashed rgba(58,47,42,.18);border-radius:16px;text-align:center}.hb-empty-state svg{color:var(--hb-terracotta)}.hb-empty-state strong{color:var(--hb-ink);font-size:13px}.hb-empty-state span{font-size:11px}.hb-no-results{margin-top:18px;color:var(--hb-muted);font-size:12px}.hb-compact{align-items:center}.hb-order-count{padding:8px 11px;color:var(--hb-dark);background:#f2dfd3;border-radius:9px;font-size:10px;font-weight:700}.hb-order-layout{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(240px,.75fr);gap:19px}.hb-order-card{padding:22px;background:rgba(255,253,249,.84);border:1px solid var(--hb-line);border-radius:20px}.hb-order-card-top{display:flex;align-items:flex-start;justify-content:space-between;padding-bottom:18px;border-bottom:1px solid var(--hb-line)}.hb-order-card-top small,.hb-order-card-top h3{display:block}.hb-order-card-top small{color:var(--hb-soft);font-size:9px;text-transform:uppercase}.hb-order-card-top h3{margin:6px 0 0;font:700 22px "Space Grotesk",sans-serif}.hb-order-card-top>span{width:37px;height:37px;display:grid;place-items:center;color:var(--hb-terracotta);background:#f5e4d9;border-radius:12px}.hb-cart-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid rgba(58,47,42,.07)}.hb-cart-main strong,.hb-cart-main span,.hb-cart-main small{display:block}.hb-cart-main strong{font-size:12px}.hb-cart-main span,.hb-cart-main small{margin-top:3px;color:var(--hb-soft);font-size:10px}.hb-quantity{display:flex;align-items:center;gap:9px;padding:4px;background:#f6f1eb;border-radius:8px}.hb-quantity button,.hb-remove{display:grid;place-items:center;width:22px;height:22px;color:var(--hb-terracotta);background:var(--hb-white);border:0;border-radius:6px}.hb-quantity b{font-size:10px}.hb-line-total{min-width:64px;color:var(--hb-ink);font-size:11px;text-align:right}.hb-remove{width:24px;height:24px;color:#a8948c;background:transparent}.hb-empty-cart{display:grid;place-items:center;gap:7px;min-height:140px;color:var(--hb-soft);text-align:center}.hb-empty-cart svg{color:var(--hb-terracotta)}.hb-empty-cart strong{color:var(--hb-ink);font-size:13px}.hb-empty-cart span{font-size:11px}.hb-order-summary{display:grid;grid-template-columns:1fr auto;gap:8px;padding:18px 0 15px}.hb-order-summary span{color:var(--hb-muted);font-size:11px}.hb-order-summary strong{color:var(--hb-dark);font:700 17px "Space Grotesk",sans-serif}.hb-order-summary small{grid-column:1/-1;color:var(--hb-soft);font-size:9px}.hb-full-button{width:100%;border:0}.hb-order-tip{position:relative;overflow:hidden;padding:24px;background:var(--hb-sage);border-radius:20px}.hb-tip-icon{display:grid;place-items:center;width:39px;height:39px;margin-bottom:30px;color:#64865c;background:#edf4ea;border-radius:12px;font-size:21px}.hb-order-tip small{color:#71806c;font-size:9px;text-transform:uppercase}.hb-order-tip h3{margin:9px 0 13px;color:#31452f;font:700 27px/.94 "Space Grotesk",sans-serif}.hb-order-tip p{max-width:215px;color:#647760;font-size:11px;line-height:1.55}.hb-history-list{display:grid;gap:9px}.hb-history-row{display:grid;grid-template-columns:1.15fr 1.6fr auto auto auto;align-items:center;gap:18px;padding:15px 17px;background:rgba(255,253,249,.74);border:1px solid var(--hb-line);border-radius:14px}.hb-history-row>div strong,.hb-history-row>div small{display:block}.hb-history-row>div small{margin-top:3px;color:var(--hb-soft);font-size:9px}.hb-history-row p{margin:0;color:var(--hb-muted);font-size:10px}.hb-status{padding:6px 9px;border-radius:7px;font-size:9px;font-weight:700;background:#dfebda;color:#68815f}.hb-history-row>strong{color:var(--hb-dark);font:700 12px "Space Grotesk",sans-serif}.hb-help-panel{display:grid;grid-template-columns:.9fr 1.1fr;gap:40px;padding:37px 42px;background:#ead8de;border-radius:24px}.hb-help-panel h2{margin:15px 0;color:#493339;font:700 40px/.92 "Space Grotesk",sans-serif}.hb-help-panel p{max-width:310px;color:#765f68;font-size:12px;line-height:1.6}.hb-help-steps{display:grid;gap:12px;align-content:center}.hb-help-steps>div{display:flex;align-items:center;gap:15px;padding:13px 15px;background:rgba(255,253,249,.48);border:1px solid rgba(255,253,249,.62);border-radius:13px}.hb-help-steps>div>b{color:#a57482;font-size:11px}.hb-help-steps strong,.hb-help-steps small{display:block}.hb-help-steps strong{color:#493339;font-size:12px}.hb-help-steps small{margin-top:4px;color:#876f77;font-size:10px}.hb-footer{padding:15px 0 17px;border-top:1px solid var(--hb-line)}.hb-footer strong{color:var(--hb-terracotta);font:700 11px "Space Grotesk",sans-serif}.hb-reveal{animation:hb-reveal .65s var(--hb-ease) both}.hb-reveal-one{animation-delay:.08s}.hb-reveal-two{animation-delay:.16s}.hb-reveal-three{animation-delay:.24s}@keyframes hb-reveal{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@media(max-width:860px){.hb-sidebar{width:236px;transform:translateX(-100%);transition:transform .35s var(--hb-ease);box-shadow:12px 0 40px rgba(55,38,30,.13)}.hb-sidebar.is-open{transform:translateX(0)}.hb-sidebar-close,.hb-mobile-menu{display:grid}.hb-main{margin-left:0}.hb-topbar{height:71px;padding:0 24px}.hb-content{padding:27px 24px 30px}.hb-hero{grid-template-columns:1fr;gap:10px}.hb-hero-visual{min-height:325px}.hb-menu-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hb-order-layout,.hb-help-panel{grid-template-columns:1fr}}
+@media(max-width:560px){.hb-connected,.hb-breadcrumb span,.hb-breadcrumb i{display:none}.hb-topbar{padding:0 16px}.hb-content{padding-left:16px;padding-right:16px}.hb-hero h1{font-size:54px}.hb-hero-actions{align-items:flex-start;flex-direction:column;gap:14px}.hb-stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-bottom:66px}.hb-stat-strip>i{display:none}.hb-stat-note{grid-column:1/-1;margin:0;padding:12px 0 0;border-left:0;border-top:1px solid var(--hb-line)}.hb-section-heading{align-items:start;flex-direction:column}.hb-search-field{width:100%}.hb-menu-grid{grid-template-columns:1fr}.hb-food-image{height:175px}.hb-history-row{grid-template-columns:1fr auto;gap:10px}.hb-history-row p{grid-column:1/-1}.hb-help-panel{padding:28px 24px;gap:23px}.hb-footer{gap:8px;flex-wrap:wrap}.hb-footer span:nth-child(2){order:3;width:100%}.hb-cart-row{grid-template-columns:1fr auto}.hb-line-total,.hb-remove{display:none}}
+</style>
 
-        * { box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
-        body { margin: 0; background: var(--background); color: var(--ink); font-family: var(--body); }
-        body.cart-open { overflow: hidden; }
-        button, input, select { font: inherit; }
-        button, a { -webkit-tap-highlight-color: transparent; }
-        button { cursor: pointer; }
-        a { color: inherit; text-decoration: none; }
-        :is(a, button, input, select):focus-visible { outline: 3px solid rgba(23, 107, 77, .28); outline-offset: 2px; }
-        [hidden] { display: none !important; }
-        .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+<script>
+(function () {
+    const sidebar = document.getElementById('customerSidebar');
+    const openButton = document.getElementById('sidebarOpen');
+    const closeButton = document.getElementById('sidebarClose');
+    const searchInput = document.getElementById('menuSearch');
+    const cards = Array.from(document.querySelectorAll('.hb-food-card'));
+    const noResults = document.getElementById('noResults');
+    const tabs = Array.from(document.querySelectorAll('.hb-category-tabs button'));
+    const navLinks = Array.from(document.querySelectorAll('.hb-nav-item'));
+    const fallbackImages = Array.from(document.querySelectorAll('img[data-fallback]'));
 
-        .mobile-customer-page { min-height: 100vh; padding-bottom: 105px; }
-        .customer-header { position: sticky; z-index: 20; top: 0; display: flex; min-height: 66px; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255, 255, 255, .96); backdrop-filter: blur(14px); }
-        .brand, .header-actions, .brand-copy, .table-banner, .welcome-banner, .menu-heading, .food-footer, .food-footer form, .section-heading, .history-row, .help-card, .cart-bar-button, .cart-item, .cart-sheet-header, .flash-message { display: flex; }
-        .brand { min-width: 0; align-items: center; gap: 9px; }
-        .brand-mark { display: inline-flex; width: 38px; height: 38px; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 12px; background: var(--green); color: #FFF; font-family: var(--display); font-size: 11px; font-weight: 700; }
-        .brand-copy { min-width: 0; flex-direction: column; gap: 2px; }
-        .brand-copy strong { overflow: hidden; font-family: var(--display); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
-        .brand-copy small { color: var(--muted); font-size: 9px; }
-        .header-cart { position: relative; display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 12px; background: #FFF; color: var(--green); }
-        .header-cart:hover { background: var(--green-soft); }
-        .header-cart > span { position: absolute; top: -4px; right: -4px; display: inline-flex; width: 19px; height: 19px; align-items: center; justify-content: center; border: 2px solid #FFF; border-radius: 50%; background: var(--orange); color: #FFF; font-size: 9px; font-weight: 700; }
-        .customer-content { width: min(100%, 620px); margin: 0 auto; padding: 20px 16px; }
-        .flash-stack { position: fixed; z-index: 60; top: 76px; right: 16px; left: 16px; display: grid; gap: 8px; width: min(100% - 32px, 420px); margin: 0 auto; pointer-events: none; }
-        .flash-message { align-items: center; gap: 7px; padding: 12px 14px; border: 1px solid #A9D9BB; border-radius: 12px; background: #DDF6E6; color: #12613F; box-shadow: 0 12px 30px rgba(23, 72, 50, .16); font-size: 11px; pointer-events: auto; animation: customer-toast-in 220ms ease-out both; }
-        .customer-order-meta { display: grid; justify-items: end; gap: 3px; }
-        .customer-order-meta small { color: var(--green); font-size: 9px; font-weight: 700; text-transform: capitalize; }
-        .flash-danger, .flash-error { border-color: #F0C8C2; background: #FFF7F5; color: #BB493E; }
-        .flash-warning { border-color: #EBD49A; background: #FFFCF1; color: #8A6507; }
-        @keyframes customer-toast-in { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        @media (prefers-reduced-motion: reduce) { .flash-message { animation: none; } }
-        .table-banner, .welcome-banner { align-items: center; gap: 10px; margin-bottom: 25px; padding: 13px; border-radius: 14px; }
-        .table-banner { border: 1px solid #C9E6D5; background: var(--green-soft); }
-        .table-icon { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; border-radius: 10px; background: var(--green); color: #FFF; }
-        .table-copy { display: grid; flex: 1; gap: 2px; }
-        .table-copy small, .welcome-banner p { color: var(--muted); font-size: 10px; }
-        .table-copy strong { font-family: var(--display); font-size: 13px; }
-        .ready-badge { padding: 5px 8px; border-radius: 999px; background: #FFF; color: var(--green); font-size: 9px; font-weight: 700; }
-        .welcome-banner { align-items: start; justify-content: space-between; background: var(--green); color: #FFF; }
-        .welcome-banner h1 { margin: 6px 0 4px; font-family: var(--display); font-size: 22px; line-height: 1.2; }
-        .welcome-banner p { margin: 0; color: rgba(255, 255, 255, .72); line-height: 1.5; }
-        .welcome-banner > svg { flex: 0 0 auto; color: #BEEACF; }
-        .eyebrow { color: var(--green); font-size: 9px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
-        .welcome-banner .eyebrow { color: #BEEACF; }
-        .menu-heading { align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 13px; }
-        .menu-heading h2, .section-heading h2 { margin: 6px 0 0; font-family: var(--display); font-size: 18px; }
-        .menu-heading > span { color: var(--muted); font-size: 10px; }
-        .search-box { display: flex; min-height: 46px; align-items: center; gap: 8px; margin-bottom: 12px; padding: 0 13px; border: 1px solid var(--border); border-radius: 12px; background: #FFF; color: #93A19A; box-shadow: var(--shadow); }
-        .search-box:focus-within { border-color: var(--green); box-shadow: 0 0 0 4px rgba(23, 107, 77, .09); }
-        .search-box input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 12px; }
-        .category-list { display: flex; gap: 7px; overflow-x: auto; margin: 0 -16px 17px; padding: 2px 16px 5px; scrollbar-width: none; }
-        .category-list::-webkit-scrollbar { display: none; }
-        .category-button { min-height: 36px; padding: 0 13px; border: 1px solid var(--border); border-radius: 999px; background: #FFF; color: var(--muted); font-size: 10px; font-weight: 700; white-space: nowrap; }
-        .category-button.is-active, .category-button:hover { border-color: var(--green); background: var(--green); color: #FFF; }
-        .menu-list { display: grid; gap: 13px; }
-        .food-card { overflow: hidden; border: 1px solid var(--border); border-radius: 14px; background: #FFF; box-shadow: var(--shadow); }
-        .food-image-wrap { position: relative; height: 165px; overflow: hidden; background: #EAF1ED; }
-        .food-image, .food-image-placeholder { display: block; width: 100%; height: 100%; object-fit: cover; }
-        .food-image-placeholder { display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #E0F1E7, #C7E4D3); color: var(--green); font-family: var(--display); font-size: 25px; font-weight: 700; }
-        .food-category { position: absolute; bottom: 10px; left: 10px; padding: 5px 8px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: var(--green-dark); font-size: 9px; font-weight: 700; }
-        .food-details { padding: 13px; }
-        .food-details h3 { margin: 0; font-family: var(--display); font-size: 14px; }
-        .food-details p { display: -webkit-box; overflow: hidden; min-height: 30px; margin: 6px 0 12px; color: var(--muted); font-size: 10px; line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
-        .food-footer { align-items: end; justify-content: space-between; gap: 8px; }
-        .food-footer > strong { color: var(--orange); font-family: var(--display); font-size: 13px; }
-        .food-footer form { min-width: 0; align-items: center; gap: 6px; }
-        .portion-select select { max-width: 90px; min-height: 38px; padding: 0 6px; border: 1px solid var(--border); border-radius: 9px; background: #FFF; color: var(--ink); font-size: 9px; }
-        .add-button, .scan-button { display: inline-flex; min-height: 42px; min-width: 72px; align-items: center; justify-content: center; gap: 4px; padding: 0 11px; border: 1px solid var(--green); border-radius: 10px; background: var(--green); color: #FFF; font-size: 10px; font-weight: 700; }
-        .add-button:hover { background: var(--green-dark); }
-        .scan-button { border-color: var(--border); background: #F3F6F4; color: var(--muted); }
-        .empty-state, .no-results { padding: 35px 15px; border: 1px dashed var(--border); border-radius: 13px; color: var(--muted); text-align: center; }
-        .empty-state h3 { margin: 0 0 5px; color: var(--ink); font-family: var(--display); font-size: 14px; }
-        .empty-state p, .no-results { margin: 0; font-size: 11px; }
-        .recent-orders { margin-top: 31px; }
-        .section-heading { align-items: end; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-        .section-heading a { color: var(--green); font-size: 10px; font-weight: 700; }
-        .history-row { align-items: center; justify-content: space-between; gap: 12px; padding: 12px; border: 1px solid var(--border); border-radius: 11px; background: #FFF; }
-        .history-row + .history-row { margin-top: 7px; }
-        .history-row > span { display: grid; gap: 3px; }
-        .history-row strong { font-family: var(--display); font-size: 11px; }
-        .history-row small { color: var(--muted); font-size: 9px; }
-        .history-row b { color: var(--orange); font-family: var(--display); font-size: 11px; }
-        .notification-card, .help-card { align-items: center; gap: 10px; margin-top: 14px; padding: 13px; border: 1px solid #C9E6D5; border-radius: 13px; background: #F1FBF4; color: var(--green); }
-        .notification-card-icon { display: inline-flex; width: 34px; height: 34px; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 10px; background: var(--green); color: #FFF; }
-        .notification-card-copy { display: grid; flex: 1; gap: 3px; }
-        .notification-card-copy strong { color: var(--ink); font-family: var(--display); font-size: 12px; }
-        .notification-card-copy small { color: var(--muted); font-size: 10px; line-height: 1.4; }
-        .notification-button { min-height: 34px; padding: 0 10px; border: 1px solid var(--green); border-radius: 9px; background: var(--green); color: #FFF; font-size: 9px; font-weight: 700; }
-        .notification-button:hover { background: var(--green-dark); }
-        .notification-card.is-enabled { border-color: #A9D9BB; background: #DDF6E6; }
-        .notification-card.is-blocked { border-color: #EBD49A; background: #FFFCF1; }
-        .help-card { margin-top: 28px; }
-        .help-card span { display: grid; gap: 3px; }
-        .help-card strong { color: var(--ink); font-family: var(--display); font-size: 12px; }
-        .help-card small { color: var(--muted); font-size: 10px; }
-        .cart-bar { position: fixed; z-index: 30; right: 0; bottom: max(10px, env(safe-area-inset-bottom)); left: 0; padding: 0 12px; pointer-events: none; }
-        .cart-bar-button { width: min(100%, 596px); min-height: 62px; align-items: center; gap: 9px; margin: 0 auto; padding: 8px 13px; border: 1px solid var(--green-dark); border-radius: 16px; background: var(--green); color: #FFF; box-shadow: 0 12px 28px rgba(14, 77, 56, .25); pointer-events: auto; text-align: left; }
-        .cart-bar-button:hover { background: var(--green-dark); }
-        .cart-badge { display: inline-flex; width: 36px; height: 36px; flex: 0 0 auto; align-items: center; justify-content: center; border-radius: 10px; background: rgba(255, 255, 255, .14); font-family: var(--display); font-size: 14px; font-weight: 700; }
-        .cart-bar-copy { display: grid; flex: 1; gap: 2px; }
-        .cart-bar-copy strong { font-family: var(--display); font-size: 12px; }
-        .cart-bar-copy small { color: rgba(255, 255, 255, .67); font-size: 9px; }
-        .cart-bar-button > b { font-family: var(--display); font-size: 11px; }
-        .cart-overlay { position: fixed; z-index: 39; inset: 0; background: rgba(16, 35, 27, .42); }
-        .cart-sheet { position: fixed; z-index: 40; right: 0; bottom: 0; left: 0; width: min(100%, 620px); max-height: min(80vh, 600px); overflow-y: auto; margin: 0 auto; padding: 18px 16px max(18px, env(safe-area-inset-bottom)); border: 1px solid var(--border); border-bottom: 0; border-radius: 20px 20px 0 0; background: #FFF; box-shadow: 0 -14px 35px rgba(21, 59, 43, .18); }
-        .cart-sheet-header { align-items: start; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
-        .cart-sheet h2 { margin: 6px 0 0; font-family: var(--display); font-size: 20px; }
-        .close-button { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 10px; background: #FFF; color: var(--muted); }
-        .cart-items { display: grid; gap: 6px; }
-        .cart-item { align-items: center; justify-content: space-between; gap: 10px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-        .cart-item-copy { display: grid; flex: 1; gap: 3px; min-width: 0; }
-        .cart-item-copy strong { overflow: hidden; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
-        .cart-item-copy small { color: var(--muted); font-size: 9px; }
-        .quantity-controls { display: flex; min-height: 35px; align-items: center; gap: 7px; border: 1px solid var(--border); border-radius: 9px; }
-        .quantity-controls button { display: inline-flex; width: 34px; height: 34px; align-items: center; justify-content: center; border: 0; background: transparent; color: var(--green); }
-        .quantity-controls span { min-width: 13px; font-family: var(--display); font-size: 11px; text-align: center; }
-        .cart-total { display: flex; align-items: center; justify-content: space-between; margin: 17px 0 12px; color: var(--muted); font-size: 12px; }
-        .cart-total strong { color: var(--orange); font-family: var(--display); font-size: 17px; }
-        .place-order, .clear-cart { display: flex; width: 100%; min-height: 46px; align-items: center; justify-content: center; gap: 6px; border-radius: 10px; font-size: 11px; font-weight: 700; }
-        .place-order { border: 1px solid var(--green); background: var(--green); color: #FFF; }
-        .clear-cart { min-height: 37px; margin-top: 6px; border: 0; background: transparent; color: var(--muted); }
-        .cart-empty { padding: 35px 15px; color: var(--muted); text-align: center; }
-        .cart-empty svg { color: var(--green); }
-        .cart-empty h3 { margin: 10px 0 5px; font-family: var(--display); font-size: 14px; }
-        .cart-empty p { margin: 0; font-size: 11px; }
-        @media (min-width: 700px) {
-            .customer-content { width: min(100%, 900px); }
-            .menu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .food-image-wrap { height: 145px; }
-            .cart-sheet { bottom: 18px; border: 1px solid var(--border); border-radius: 20px; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
-        }
-    </style>
-{% endblock %}
-
-{% block extra_js %}
-    <script>
-        (function () {
-            const searchInput = document.getElementById('menuSearch');
-            const foodCards = Array.from(document.querySelectorAll('[data-food-card]'));
-            const noResults = document.getElementById('noResults');
-            const cartSheet = document.getElementById('cartSheet');
-            const cartOverlay = document.getElementById('cartOverlay');
-
-            function filterMenu() {
-                const query = (searchInput?.value || '').trim().toLowerCase();
-                const category = document.querySelector('.category-button.is-active')?.dataset.category || 'all';
-                let visibleCount = 0;
-
-                foodCards.forEach(function (card) {
-                    const matchesName = !query || card.dataset.name.includes(query);
-                    const matchesCategory = category === 'all' || card.dataset.category === category;
-                    const visible = matchesName && matchesCategory;
-                    card.hidden = !visible;
-                    if (visible) visibleCount += 1;
-                });
-
-                if (noResults) noResults.hidden = visibleCount !== 0;
+    fallbackImages.forEach(function (image) {
+        image.addEventListener('error', function () {
+            if (image.src !== image.dataset.fallback) {
+                image.src = image.dataset.fallback;
             }
+        });
+    });
 
-            function openCart() {
-                if (!cartSheet || !cartOverlay) return;
-                cartSheet.hidden = false;
-                cartOverlay.hidden = false;
-                document.body.classList.add('cart-open');
-                cartSheet.querySelector('.close-button')?.focus();
-            }
+    openButton && openButton.addEventListener('click', function () { sidebar.classList.add('is-open'); });
+    closeButton && closeButton.addEventListener('click', function () { sidebar.classList.remove('is-open'); });
+    navLinks.forEach(function (link) { link.addEventListener('click', function () { sidebar.classList.remove('is-open'); }); });
 
-            function closeCart() {
-                if (!cartSheet || !cartOverlay) return;
-                cartSheet.hidden = true;
-                cartOverlay.hidden = true;
-                document.body.classList.remove('cart-open');
-            }
+    function filterMenu() {
+        const query = (searchInput ? searchInput.value : '').trim().toLowerCase();
+        const activeTab = document.querySelector('.hb-category-tabs button.is-active');
+        const category = activeTab ? activeTab.dataset.category : 'all';
+        let visible = 0;
+        cards.forEach(function (card) {
+            const matchesSearch = !query || card.dataset.foodName.includes(query);
+            const matchesCategory = category === 'all' || card.dataset.category === category;
+            const show = matchesSearch && matchesCategory;
+            card.hidden = !show;
+            if (show) visible += 1;
+        });
+        if (noResults) noResults.hidden = visible !== 0;
+    }
 
-            searchInput?.addEventListener('input', filterMenu);
-            document.querySelectorAll('.category-button').forEach(function (button) {
-                button.addEventListener('click', function () {
-                    document.querySelectorAll('.category-button').forEach(function (chip) {
-                        chip.classList.remove('is-active');
-                        chip.setAttribute('aria-selected', 'false');
-                    });
-                    button.classList.add('is-active');
-                    button.setAttribute('aria-selected', 'true');
-                    filterMenu();
-                });
-            });
-            document.querySelectorAll('[data-open-cart]').forEach(function (button) {
-                button.addEventListener('click', openCart);
-            });
-            document.querySelectorAll('[data-close-cart]').forEach(function (button) {
-                button.addEventListener('click', closeCart);
-            });
-            cartOverlay?.addEventListener('click', closeCart);
-            document.addEventListener('keydown', function (event) {
-                if (event.key === 'Escape') closeCart();
-            });
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            tabs.forEach(function (item) { item.classList.remove('is-active'); });
+            tab.classList.add('is-active');
+            filterMenu();
+        });
+    });
+    searchInput && searchInput.addEventListener('input', filterMenu);
 
-            const cartBar = document.getElementById('cartBar');
-            const cartCount = document.getElementById('cartCount');
-            const cartBarTotal = document.getElementById('cartBarTotal');
-            const cartItems = document.getElementById('cartItems');
-            const cartEmpty = document.getElementById('cartEmpty');
-            const cartTotalRow = document.getElementById('cartTotalRow');
-            const cartSheetTotal = document.getElementById('cartSheetTotal');
-            const cartActions = document.getElementById('cartActions');
-
-            function escapeHtml(value) {
-                return String(value || '').replace(/[&<>'\"]/g, function (character) {
-                    return {
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        "'": '&#039;',
-                        '\"': '&quot;'
-                    }[character];
-                });
-            }
-
-            function showCartMessage(message, kind) {
-                const stack = document.querySelector('.flash-stack') || document.createElement('div');
-                if (!stack.parentNode) {
-                    stack.className = 'flash-stack';
-                    document.querySelector('.customer-content')?.prepend(stack);
-                }
-                const notice = document.createElement('div');
-                notice.className = 'flash-message' + (kind === 'error' ? ' flash-danger' : '');
-                notice.textContent = message;
-                stack.prepend(notice);
-                window.setTimeout(function () {
-                    notice.remove();
-                }, 2000);
-            }
-
-            function renderCart(snapshot) {
-                const cart = snapshot.cart || {};
-                const entries = Object.values(cart);
-                const itemCount = Number(snapshot.item_count || 0);
-                const totalValue = Number(snapshot.total || 0);
-                const hasItems = itemCount > 0;
-
-                if (cartBar) cartBar.hidden = !hasItems;
-                if (cartCount) cartCount.textContent = itemCount;
-                if (cartBarTotal) cartBarTotal.textContent = 'Rs. ' + totalValue.toFixed(2);
-                if (cartTotalRow) cartTotalRow.hidden = !hasItems;
-                if (cartSheetTotal) cartSheetTotal.textContent = 'Rs. ' + totalValue.toFixed(2);
-                if (cartActions) cartActions.hidden = !hasItems;
-                if (cartEmpty) cartEmpty.hidden = hasItems;
-                if (!cartItems) return;
-
-                cartItems.innerHTML = entries.map(function (item) {
-                    const itemId = Number(item.id);
-                    const quantity = Number(item.quantity || 0);
-                    const price = Number(item.price || 0);
-                    return '<div class="cart-item" data-cart-item data-item-id="' + itemId + '">' +
-                        '<span class="cart-item-copy"><strong>' + escapeHtml(item.name) + '</strong>' +
-                        '<small>' + escapeHtml(item.portion_label || 'Full Plate') + ' · Rs. ' + price.toFixed(2) + '</small></span>' +
-                        '<form class="quantity-controls" method="POST" action="/customer/cart/update/' + itemId + '" data-cart-update>' +
-                        '<button type="submit" name="quantity" value="' + Math.max(quantity - 1, 0) + '" aria-label="Decrease ' + escapeHtml(item.name) + '">−</button>' +
-                        '<span data-cart-quantity>' + quantity + '</span>' +
-                        '<button type="submit" name="quantity" value="' + (quantity + 1) + '" aria-label="Increase ' + escapeHtml(item.name) + '">+</button>' +
-                        '</form></div>';
-                }).join('');
-            }
-
-            async function submitCartForm(form, submitter) {
-                const formData = new FormData(form);
-                if (submitter && submitter.name) {
-                    formData.set(submitter.name, submitter.value);
-                }
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: { Accept: 'application/json' }
-                });
-                const data = await response.json();
-                if (!response.ok || !data.success) {
-                    throw new Error(data.message || 'Unable to update your order.');
-                }
-                renderCart(data);
-                return data;
-            }
-
-            document.querySelectorAll('.flash-message').forEach(function (notice) {
-                window.setTimeout(function () {
-                    notice.remove();
-                }, 2000);
-            });
-
-            const notificationCard = document.querySelector('[data-notification-card]');
-            const enableNotificationsButton = document.querySelector('[data-enable-notifications]');
-            const notificationTitle = document.querySelector('[data-notification-title]');
-            const notificationStatus = document.querySelector('[data-notification-status]');
-
-            function updateNotificationPermissionUI(permission) {
-                if (!notificationCard || !enableNotificationsButton) return;
-                notificationCard.classList.remove('is-enabled', 'is-blocked');
-
-                if (!('Notification' in window)) {
-                    notificationCard.classList.add('is-blocked');
-                    notificationTitle.textContent = 'Notifications unavailable';
-                    notificationStatus.textContent = 'This mobile browser does not support order notifications.';
-                    enableNotificationsButton.hidden = true;
-                    return;
-                }
-
-                if (permission === 'granted') {
-                    notificationCard.classList.add('is-enabled');
-                    notificationTitle.textContent = 'Order notifications enabled';
-                    notificationStatus.textContent = 'You will be notified when your order status changes.';
-                    enableNotificationsButton.hidden = true;
-                } else if (permission === 'denied') {
-                    notificationCard.classList.add('is-blocked');
-                    notificationTitle.textContent = 'Allow order notifications';
-                    notificationStatus.textContent = 'Tap Allow notifications and choose Allow in the browser prompt.';
-                    enableNotificationsButton.hidden = false;
-                    enableNotificationsButton.textContent = 'Allow notifications';
-                } else {
-                    notificationTitle.textContent = 'Get order updates';
-                    notificationStatus.textContent = 'Tap Allow notifications, then choose Allow when your browser asks.';
-                    enableNotificationsButton.hidden = false;
-                    enableNotificationsButton.textContent = 'Allow notifications';
-                }
-            }
-
-            async function requestMobileNotificationPermission(event) {
-                if (event) event.preventDefault();
-                if (!notificationCard || !enableNotificationsButton) return;
-
-                if (!('Notification' in window)) {
-                    updateNotificationPermissionUI('unsupported');
-                    return;
-                }
-
-                if (!window.isSecureContext) {
-                    notificationTitle.textContent = 'Secure connection required';
-                    notificationStatus.textContent = 'Open the HTTPS restaurant link to enable mobile notifications.';
-                    notificationCard.classList.add('is-blocked');
-                    return;
-                }
-
-                if (Notification.permission === 'denied') {
-                    notificationTitle.textContent = 'Notifications blocked by browser';
-                    notificationStatus.textContent = 'This browser has already blocked permission for this website. Reset the site permission, then tap Allow notifications again.';
-                    notificationCard.classList.add('is-blocked');
-                    return;
-                }
-
-                enableNotificationsButton.disabled = true;
-                enableNotificationsButton.textContent = 'Requesting…';
-                notificationStatus.textContent = 'Choose Allow in the browser permission popup.';
-
-                try {
-                    const permission = await Notification.requestPermission();
-                    updateNotificationPermissionUI(permission);
-                    if (permission === 'granted') {
-                        new Notification('Himalayan Bites notifications enabled', {
-                            body: 'You will receive updates when your order is preparing, ready, or served.',
-                            tag: 'restaurant-notifications-enabled'
-                        });
-                    }
-                } catch (error) {
-                    notificationTitle.textContent = 'Permission could not be opened';
-                    notificationStatus.textContent = 'Use the HTTPS restaurant link and tap Allow notifications again.';
-                    notificationCard.classList.add('is-blocked');
-                    enableNotificationsButton.disabled = false;
-                    enableNotificationsButton.textContent = 'Allow notifications';
-                }
-            }
-
-            updateNotificationPermissionUI('Notification' in window ? Notification.permission : 'unsupported');
-            if (enableNotificationsButton) {
-                enableNotificationsButton.addEventListener('click', requestMobileNotificationPermission);
-            }
-
-            function sendMobileOrderNotification(order, message) {
-                if (!('Notification' in window) || Notification.permission !== 'granted') return;
-                const orderLabel = order.order_number || order.id;
-                new Notification('Himalayan Bites · Order #' + orderLabel, {
-                    body: message,
-                    tag: 'restaurant-order-' + order.id,
-                    icon: '/static/images/favicon.png'
-                });
-            }
-
-            const orderStatusUrl = "{{ url_for('customer.order_status') }}";
-            const customerLoginUrl = "{{ url_for('auth.login') }}";
-            const trackedOrderStatuses = new Map();
-            const statusMessages = {
-                pending: 'Your order has been received.',
-                preparing: 'The kitchen is preparing your order.',
-                ready: 'Your order is ready.',
-                served: 'Your order has been served.',
-                cancelled: 'Your order was cancelled.'
-            };
-
-            document.querySelectorAll('[data-customer-order]').forEach(function (row) {
-                trackedOrderStatuses.set(
-                    String(row.dataset.orderId),
-                    row.querySelector('[data-order-status]')?.textContent.trim().toLowerCase() || ''
-                );
-            });
-
-            function updateCustomerOrderStatuses(payload) {
-                const tableStatus = String(payload.table_status || '').toLowerCase();
-                const hadPreviousOrders = trackedOrderStatuses.size > 0;
-
-                // Reception cleared this table. Leave immediately so the next
-                // customer cannot see the previous table session or its orders.
-                if (tableStatus === 'available' && hadPreviousOrders) {
-                    window.location.replace(customerLoginUrl);
-                    return;
-                }
-
-                (payload.orders || []).forEach(function (order) {
-                    const orderId = String(order.id);
-                    const nextStatus = String(order.status || '').toLowerCase();
-                    const previousStatus = trackedOrderStatuses.get(orderId);
-                    const statusLabel = nextStatus.replace(/_/g, ' ');
-                    const statusNode = document.querySelector(
-                        '[data-customer-order][data-order-id="' + orderId + '"] [data-order-status]'
-                    );
-
-                    if (statusNode) {
-                        statusNode.textContent = statusLabel.replace(/\b\w/g, function (letter) {
-                            return letter.toUpperCase();
-                        });
-                    }
-
-                    if (previousStatus && previousStatus !== nextStatus) {
-                        const message = statusMessages[nextStatus] || ('Order status: ' + statusLabel + '.');
-                        sendMobileOrderNotification(order, message);
-                    }
-
-                    trackedOrderStatuses.set(orderId, nextStatus);
-                });
-            }
-
-            async function pollCustomerOrderStatuses() {
-                try {
-                    const response = await fetch(orderStatusUrl, {
-                        headers: { Accept: 'application/json' },
-                        cache: 'no-store'
-                    });
-                    if (!response.ok) return;
-                    updateCustomerOrderStatuses(await response.json());
-                } catch (error) {
-                    // A temporary network failure should not interrupt ordering.
-                }
-            }
-
-            if (document.getElementById('customerPage')?.dataset.hasTable === 'true') {
-                pollCustomerOrderStatuses();
-                window.setInterval(pollCustomerOrderStatuses, 5000);
-            }
-
-            document.addEventListener('submit', function (event) {
-                const form = event.target;
-                if (!form.matches('[data-cart-add], [data-cart-update], [data-cart-clear], [data-cart-place-order]')) {
-                    return;
-                }
-                event.preventDefault();
-                const submitButton = form.querySelector('button[type="submit"]');
-                if (submitButton) submitButton.disabled = true;
-                submitCartForm(form, event.submitter)
-                    .then(function (data) {
-                        if (form.matches('[data-cart-place-order]')) {
-                            closeCart();
-                        }
-                        if (data.message) showCartMessage(data.message, 'success');
-                    })
-                    .catch(function (error) {
-                        showCartMessage(error.message, 'error');
-                    })
-                    .finally(function () {
-                        if (submitButton) submitButton.disabled = false;
-                    });
-            });
-        }());
-    </script>
+    const sections = Array.from(document.querySelectorAll('[data-section]'));
+    const panels = Array.from(document.querySelectorAll('.hb-section-anchor'));
+    const observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            navLinks.forEach(function (link) { link.classList.toggle('is-active', link.dataset.section === entry.target.id); });
+        });
+    }, { rootMargin: '-30% 0px -55% 0px' });
+    panels.forEach(function (panel) { observer.observe(panel); });
+})();
+</script>
 {% endblock %}
