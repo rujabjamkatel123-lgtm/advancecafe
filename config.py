@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get(
 
 SECURE_SESSION_COOKIE = os.environ.get(
     "SECURE_SESSION_COOKIE",
-    "0"  # Local HTTP development; set SECURE_SESSION_COOKIE=1 on HTTPS production
+    "1" if os.environ.get("VERCEL") else "0"
 ).lower() in {"1", "true", "yes", "on"}
 
 # Public origin used in printed customer QR codes. Set this to the deployed

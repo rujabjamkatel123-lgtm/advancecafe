@@ -90,6 +90,10 @@ class AuthController(BaseController):
             return render_template("auth/login.html")
 
         role = str(user_data.get("role") or "").strip().lower()
+        # Some database records use "restaurant" for front-of-house staff.
+        # The application route and permission name is "receptionist".
+        if role == "restaurant":
+            role = "receptionist"
         if role not in {"customer", "receptionist", "manager"}:
             flash("This account has an invalid user role. Please contact the manager.", "danger")
             return render_template("auth/login.html")
@@ -104,14 +108,14 @@ class AuthController(BaseController):
         # Mobile login
         if mobile and role == "customer":
             return redirect(
-                url_for("auth.customer_mobile_dashboard")
+                url_for("customer.mobile")
             )
 
         # Normal dashboard based on role
         if role == "customer":
 
             return redirect(
-                url_for("auth.customer_dashboard")
+                url_for("customer.dashboard")
             )
 
         elif role == "receptionist":
@@ -216,7 +220,7 @@ class AuthController(BaseController):
 
             return redirect(
                 url_for(
-                    "auth.customer_mobile_dashboard"
+                    "customer.mobile"
                 )
             )
 
@@ -793,7 +797,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.customer_dashboard")
+                url_for("customer.dashboard")
             )
 
         quantity = request.form.get(
@@ -842,7 +846,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.customer_dashboard")
+            url_for("customer.dashboard")
         )
 
     # =========================================================
@@ -1035,7 +1039,7 @@ class AuthController(BaseController):
 
             return redirect(
                 url_for(
-                    "auth.customer_order_history"
+                    "customer.orders"
                 )
             )
 
@@ -1230,7 +1234,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.receptionist_dashboard")
+            url_for("receptionist.dashboard")
         )
 
     # =========================================================
@@ -1251,7 +1255,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.receptionist_dashboard")
+            url_for("receptionist.dashboard")
         )
 
     # =========================================================
@@ -1272,7 +1276,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.receptionist_dashboard")
+            url_for("receptionist.dashboard")
         )
 
     # =========================================================
@@ -1512,7 +1516,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1535,7 +1539,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1555,7 +1559,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1591,7 +1595,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.manager_dashboard")
+            url_for("manager.dashboard")
         )
 
     # =========================================================
@@ -1612,7 +1616,7 @@ class AuthController(BaseController):
             )
 
             return redirect(
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1669,7 +1673,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1692,7 +1696,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1712,7 +1716,7 @@ class AuthController(BaseController):
 
             return redirect(
                 request.referrer or
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         # -----------------------------------------------------
@@ -1749,7 +1753,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.manager_dashboard")
+            url_for("manager.dashboard")
         )
 
     # =========================================================
@@ -1770,7 +1774,7 @@ class AuthController(BaseController):
             )
 
             return redirect(
-                url_for("auth.manager_dashboard")
+                url_for("manager.dashboard")
             )
 
         try:
@@ -1798,7 +1802,7 @@ class AuthController(BaseController):
 
         return redirect(
             request.referrer or
-            url_for("auth.manager_dashboard")
+            url_for("manager.dashboard")
         )
 
     # =========================================================
