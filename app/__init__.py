@@ -132,7 +132,7 @@ def create_app():
         )
 
         return render_template(
-            "notfound.html"
+            "500.html"
         ), 500
 
     # =========================================================
