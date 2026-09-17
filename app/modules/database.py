@@ -47,10 +47,16 @@ class Database:
                 user=config.MYSQL_USER,
                 password=config.MYSQL_PASSWORD,
                 database=config.MYSQL_DATABASE,
+                charset="utf8mb4",
                 cursorclass=pymysql.cursors.DictCursor,
 
-                # Your hosted MySQL database currently uses SSL.
-                ssl={"ssl": {}}
+                connect_timeout=15,
+                read_timeout=15,
+                write_timeout=15,
+
+                # Aiven requires TLS. PyMySQL negotiates TLS with the
+                # server certificate when an SSL dictionary is provided.
+                ssl={}
             )
 
             print("Database connected successfully!")
