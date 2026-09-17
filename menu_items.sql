@@ -61,3 +61,5 @@ VALUES
     ('Masala Chiya (Spiced Milk Tea)', 80.00, NULL, (SELECT id FROM menu_categories WHERE name = 'Drinks'), 'Spiced milk tea.', 'masala-chiya.jpg', 1),
     ('Hot Lemon with Honey', 120.00, NULL, (SELECT id FROM menu_categories WHERE name = 'Drinks'), 'Hot lemon drink sweetened with honey.', 'hot-lemon-with-honey.jpg', 1);
     
+
+    
